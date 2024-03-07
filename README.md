@@ -36,5 +36,6 @@ Make sure to run the initial migration commands to update the database (from the
 ### Based on : Full description and guide (beware this guide targets an older python version!) ###
 https://medium.freecodecamp.org/structuring-a-flask-restplus-web-service-for-production-builds-c2ec676de563
 
-# deployment-classification
-# deployment-classification
+
+### The model making the prediction is not laoded into thei repository due the extensive size.
+
