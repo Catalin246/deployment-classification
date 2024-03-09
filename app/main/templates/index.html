@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classification</title>
+</head>
+
+<body>
+    <h1>Welcome to Cat/Dog predictor</h1>
+
+    <input type="file" id="fileInput">
+    <button onclick="predict()">Predict</button>
+    <div id="predictionResult"></div>
+    <div id="imagePreview"></div>
+
+    <script>
+        function predict() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                var base64Data = reader.result.split(',')[1];
+                displayImage(reader.result);
+                sendPrediction(base64Data);
+            };
+            reader.onerror = function (error) {
+                console.error('Error:', error);
+            };
+        }
+
+        function sendPrediction(base64Data) {
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: base64Data })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var formattedResult = `
+                    <p>Prediction:</p>
+                    <ul>
+                        <li>Dog: ${data.prediction.dog.toFixed(4) * 100}%</li>
+                        <li>Cat: ${data.prediction.cat.toFixed(4) * 100}%</li>
+                    </ul>`;
+                    document.getElementById('predictionResult').innerHTML = formattedResult;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function displayImage(imageSrc) {
+            var imagePreview = document.getElementById('imagePreview');
+            imagePreview.innerHTML = `<img src="${imageSrc}" alt="Uploaded Image" width="200">`;
+        }
+    </script>
+</body>
+
+</html>

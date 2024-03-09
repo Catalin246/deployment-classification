@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
@@ -22,5 +22,8 @@ def create_app(config_name: str) -> Flask:
     db.init_app(app)
     flask_bcrypt.init_app(app)
 
+    @app.route('/home', methods=['GET'])
+    def predict():
+        return send_file('templates/index.html')
 
     return app
